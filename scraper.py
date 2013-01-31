@@ -8,31 +8,35 @@ from BeautifulSoup import BeautifulSoup
 
 class Scraper:
 
-    def __init__(self):
-        pass
+    def __init__(self, url):
+        self.mBr = mechanize.Browser()
+        self.mHTML = self.mBr.open(url).read()
+        self.mSoup = BeautifulSoup(self.mHTML)
 
-    # getHtml(string url)
-    #
-    # Given a url, it returns the full html
-    def getHtml(self, url):
-        try :
-            response = mechanize.urlopen(url)
-        except:
-            print "[-] Broken url:", url
-            return ""
-            
-        return response.read()        
+    def getTitle(self):
+        return self.mSoup.title.string
+
+    def getHtml(self):
+        return self.mHTML        
+
+    def getText(self):
+
+        #print self.mSoup.findAll(text=True)
 
     # getLinks(string html)
     #
     # Returns a list of urls found the html
-    def getLinks(self, html):
+    def getLinks(self):
+        #for link in self.mBr.links():
+        #    print link.url
         out = []
-        soup = BeautifulSoup(html)
-        for link in soup.findAll('a', attrs={'href': re.compile("^http://")}):
+        for link in self.mSoup.findAll('a', attrs={'href': re.compile("^http://")}):
             out.append(str(link["href"])) # XXX: Returns unicode
         return out
 
+    def getImageLinks(self):
+        out = []
+        return out
     # scrapeAll(string url, int depth, int indent)
     # 
     # Given a url, it reqursively finds all urls and retreives all html into one giant chunck of text

@@ -12,8 +12,11 @@ class Parser:
         self.mNounHist = dict()
 
     def parse(self, words):
-        words = words.split()
-        print "\n[*] Parsing words, count:", len(words)        
+        
+        print "\n[*] Parsing words, count:", len(words.split())        
+
+        words = str(self.cleanHTML(words)).split()
+        print "[+] After cleaning up html:", len(words)
 
         words = self.removeDirtyContains(words)
         print "[+] After removing dirty contains:", len(words)
@@ -21,12 +24,20 @@ class Parser:
         words = self.selectNLTKNouns(words)
         print "[+] After selecting nltk NN tag", len(words)
 
+        wordsHist = dict()
         for word in words:
-            if not word in self.mNounHist:
-                self.mNounHist[word] = 1
+            if not word in wordsHist:
+                wordsHist[word] = 1
             else:
-                self.mNounHist[word] += 1
-        print "[+] After removing duplicates:", len(self.mNounHist)
+                wordsHist[word] += 1
+        print "[+] After removing duplicates:", len(wordsHist)
+
+        print "[+] Sorting dictionary\n"
+        wordsHist = sorted([(value,key) for (key,value) in wordsHist.items()], reverse=True)
+        return wordsHist
+
+    def cleanHTML(self, words):
+        return nltk.clean_html(words)
 
     def selectNLTKNouns(self, words):
         out = []

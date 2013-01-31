@@ -1,0 +1,14 @@
+# query.py
+#
+# Structure for holding all information for each url
+
+class Query:
+    def __init__(self):
+        self.mTitle = ""
+        self.mURL = ""
+        self.mImageURLs = []
+        self.mVideoURLs = []
+        self.mHTMLUrls = []
+        self.mKeywordHist = dict()
+        self.mGoogleQuery = ""
+        self.mDepth = 0
