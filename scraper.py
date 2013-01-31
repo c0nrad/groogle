@@ -16,12 +16,15 @@ class Scraper:
         response = mechanize.urlopen(url)
         return response.read()        
 
+    # getLinks(string html)
+    #
+    # Returns a list of urls in the html
     def getLinks(self, html):
         print "[+] Gathering all links on page"
         out = []
         soup = BeautifulSoup(html)
         for link in soup.findAll('a', attrs={'href': re.compile("^http://")}):
-            out += link
+            out.append(link["href"]) # XXX: Returns unicode
         return out
 
 if __name__ == "__main__":
