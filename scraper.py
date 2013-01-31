@@ -15,33 +15,37 @@ class Scraper:
     #
     # Given a url, it returns the full html
     def getHtml(self, url):
-        print "[+] Gathering html for:", url
-        response = mechanize.urlopen(url)
+        try :
+            response = mechanize.urlopen(url)
+        except:
+            print "[-] Broken url:", url
+            return ""
+            
         return response.read()        
 
     # getLinks(string html)
     #
     # Returns a list of urls found the html
     def getLinks(self, html):
-        print "[+] Gathering all links on page"
         out = []
         soup = BeautifulSoup(html)
         for link in soup.findAll('a', attrs={'href': re.compile("^http://")}):
             out.append(str(link["href"])) # XXX: Returns unicode
         return out
 
-    # scrapeAll(string url, int depth)
+    # scrapeAll(string url, int depth, int indent)
     # 
     # Given a url, it reqursively finds all urls and retreives all html into one giant chunck of text
     # The depth parameter is used to specify how many urls deep it should search.
-    def scrapeAll(self, url, depth):
+    def scrapeAll(self, url, depth, indent = 0):
+        print "[*]" + "\t" * indent, "Scraping", url, "with depth", depth
         if depth == 0:
             return self.getHtml(url)
         else:
             outData = ""
             links = self.getLinks(self.getHtml(url))
             for link in links:
-                outData += self.scrapeAll(link, depth-1)
+                outData += self.scrapeAll(link, depth-1, indent + 1)
             return outData
 
 if __name__ == "__main__":

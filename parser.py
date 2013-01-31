@@ -3,45 +3,59 @@
 # Given the html of a page, the parser takes all important information, and adds it to the ui.
 
 import nltk # TODO: Look into licensing issues
+import string
 
 class Parser:
     
     def __init__(self):
         self.nouns = []
+        self.mNounHist = dict()
 
-    # Wayyyy to slow. This needs to be fast as lightning
     def parse(self, words):
-        print "[*] Parsing words len:", len(words)
+        words = words.split()
+        print "\n[*] Parsing words, count:", len(words)        
 
-        words = set(words.split()) # Remove duplicates
-        print "[+] After removing duplicates:", len(words)
-        
         words = self.removeDirtyContains(words)
         print "[+] After removing dirty contains:", len(words)
 
+        words = self.selectNLTKNouns(words)
+        print "[+] After selecting nltk NN tag", len(words)
+
+        for word in words:
+            if not word in self.mNounHist:
+                self.mNounHist[word] = 1
+            else:
+                self.mNounHist[word] += 1
+        print "[+] After removing duplicates:", len(self.mNounHist)
+
+    def selectNLTKNouns(self, words):
+        out = []
         words = " ".join(words)
-        print "[+] Starting the word tokenizer"
         words = nltk.word_tokenize(words)
         words = nltk.pos_tag(words)
         for word in words:
             if(word[1] == "NN"):
-                self.nouns.append(word[0])
+                out.append(word[0])
+        return out
 
     def removeDirtyContains(self, words):
-        out = set()
-        dirtyContains = [",", ".", "/", "\\", "\"", "(", ")", "{", "}", ">", "<", ";", "-", "="]
-        for word in words:
+        out = []
+        dirtyContains = string.punctuation
 
-            wasDirty = False
+        for word in words:
+            isDirty = False
             for dirty in dirtyContains:
                 if (dirty in word):
-                    wasDirty = True
+                    isDirty = True
                     break
                 
-            if not wasDirty:
-                out.add(word)
+            if not isDirty:
+                out.append(str(word))
 
         return out
+
+    def removeDirtyWords(self, words):
+        pass
         
 def main():
     """Simple main method for testing purposes"""

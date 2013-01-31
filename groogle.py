@@ -7,7 +7,8 @@ import parser
 if __name__ == "__main__":
     scraper = scraper.Scraper()
     data = scraper.scrapeAll("http://www.google.com", 0)
+    #data = scraper.scrapeAll("http://www.youtube.com", 0)
     
     parser = parser.Parser()
     parser.parse(data)
-    print parser.nouns
+    print parser.mNounHist
