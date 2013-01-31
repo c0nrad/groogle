@@ -7,7 +7,6 @@ import parser
 if __name__ == "__main__":
     scraper = scraper.Scraper()
     data = scraper.scrapeAll("http://www.google.com", 0)
-    print "[+] Data is a set"
     
     parser = parser.Parser()
     parser.parse(data)
