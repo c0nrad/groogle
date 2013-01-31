@@ -10,6 +10,8 @@ class Parser:
         self.nouns = []
 
     def parse(self, words):
+        words = " ".join(set(words.split()))
+
         words = nltk.word_tokenize(words)
         words = nltk.pos_tag(words)
         for word in words:

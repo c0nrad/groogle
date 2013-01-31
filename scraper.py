@@ -9,8 +9,11 @@ from BeautifulSoup import BeautifulSoup
 class Scraper:
 
     def __init__(self):
-        self.urlQueue = []
-        
+        pass
+
+    # getHtml(string url)
+    #
+    # Given a url, it returns the full html
     def getHtml(self, url):
         print "[+] Gathering html for:", url
         response = mechanize.urlopen(url)
@@ -18,20 +21,32 @@ class Scraper:
 
     # getLinks(string html)
     #
-    # Returns a list of urls in the html
+    # Returns a list of urls found the html
     def getLinks(self, html):
         print "[+] Gathering all links on page"
         out = []
         soup = BeautifulSoup(html)
         for link in soup.findAll('a', attrs={'href': re.compile("^http://")}):
-            out.append(link["href"]) # XXX: Returns unicode
+            out.append(str(link["href"])) # XXX: Returns unicode
         return out
+
+    # scrapeAll(string url, int depth)
+    # 
+    # Given a url, it reqursively finds all urls and retreives all html into one giant chunck of text
+    # The depth parameter is used to specify how many urls deep it should search.
+    def scrapeAll(self, url, depth):
+        if depth == 0:
+            return self.getHtml(url)
+        else:
+            outData = ""
+            links = self.getLinks(self.getHtml(url))
+            for link in links:
+                outData += self.scrapeAll(link, depth-1)
+            return outData
 
 if __name__ == "__main__":
     scraper = Scraper()
-    html = scraper.getHtml("http://www.google.com")
-    print scraper.getLinks(html)
-
+    data= scraper.scrapeAll("http://www.google.com", 2)
 
 # getPlain(string url):
 #   
