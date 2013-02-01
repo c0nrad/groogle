@@ -9,8 +9,27 @@ Todo List (Ordered by priority)
 
 - Finish commenting code, make sure to finalize style guidelines
 
-
-
 ---googleDriver.py----
-Put into 
+- Put into a class
+- Add support for google hacks, e.x. infile: +"lol" filetype:.pdf
+- Add support for images
+- Add support for videos
 
+---scraper.py---
+- Finish methods that aren't implemented, like gathering the images
+- Extend the functionality of beautifulsoup/mechanize
+
+---parser.py---
+- Remove the nltk, too slowwww
+- Add some words for the dirtyWords list, and implement it. Such as the word "b"
+
+---view.py---
+- Actually having a view would be nice
+
+---groogle.py---
+- Add functionality for depth
+- Put into class, have it call view
+- Multithead
+
+---query.py---
+- Ionno, more helper functions

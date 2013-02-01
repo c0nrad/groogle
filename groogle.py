@@ -9,8 +9,8 @@ import googleDriver
 def buildQuery(googleSearch, depth):
     print "[*] buildQuery:", googleSearch
     
-    print "[+] Running googleDriver"
     googleURLs = googleDriver.googleSearch(googleSearch)
+    print "[+] googleDriver found hits:", len(googleURLs)
     for url in googleURLs:
         q = query.Query()
         q.mGoogleQuery = googleSearch

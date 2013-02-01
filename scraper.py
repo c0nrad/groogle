@@ -30,10 +30,6 @@ class Scraper:
     def getHtml(self):
         return self.mHTML        
 
-    def getText(self):
-        pass
-        #print self.mSoup.findAll(text=True)
-
     # getLinks(string html)
     #
     # Returns a list of urls found the html
