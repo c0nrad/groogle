@@ -21,16 +21,17 @@ def googleSearch(search):
 
     br = mechanize.Browser()
 
-    # Pretend to not be a robot  TODO: Ewwwwwwwwwwww
+    # Pretend to not be a robot 
     br.set_handle_robots(False)
-    br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.01) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+    br.addheaders = [('User-agent', 'Mozilla/5.0')]
 
     html = br.open(url).read()
     soup = BeautifulSoup(html, "html5lib")
 
     for link in soup.findAll('a', attrs={'href': re.compile("^/url\?q=")}):
-        # parse out the actual URL
-        continue
+        temp = re.split("\/url\?q=([^&]+)\&.*", link['href'])
+        print temp[1]
+    
 
 
 # googleImageSearch(string search):
@@ -44,5 +45,5 @@ def googleImageSearch(search):
 
 
 if __name__ == "__main__":
-    print googleSearch("Adam Funkenbusch")
+    print googleSearch("Joseph Mama")
 
