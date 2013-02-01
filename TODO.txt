@@ -22,6 +22,7 @@ Todo List (Ordered by priority)
 ---parser.py---
 - Remove the nltk, too slowwww
 - Add some words for the dirtyWords list, and implement it. Such as the word "b"
+- Look into licensing issues for nltk
 
 ---view.py---
 - Actually having a view would be nice

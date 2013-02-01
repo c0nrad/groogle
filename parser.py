@@ -1,7 +1,7 @@
-# parser.py
-#
-# Given the html of a page, the parser takes all important information, and adds it to the ui.
+"""@package parser
 
+The parser is used to take plain html and return the important words.
+"""
 import nltk # TODO: Look into licensing issues
 import string
 
@@ -12,7 +12,13 @@ class Parser:
         self.mNounHist = dict()
 
     def parse(self, words):
-        
+        """
+        Main parser function for parser class, removes all the cluter, and returns
+        all the important words.
+
+        @param words Single string of html
+        @retval Histogram in the form { word(string) : count (int) }
+        """
         print "\n[*] Parsing words, count:", len(words.split())        
 
         words = str(self.cleanHTML(words)).split()
