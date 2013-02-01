@@ -19,6 +19,9 @@ def buildQuery(googleSearch, depth):
         
         print "[+] Grabbing html for:", q.mURL
         scrape = scraper.Scraper(q.mURL)
+        if scrape.isBad:
+            print "[-] Skipping bad url:", q.mURL, "\n"
+            continue
         q.mHTML = scrape.getHtml()
 
         print "[+] Grabbing title for:", q.mURL
@@ -39,4 +42,4 @@ def buildQuery(googleSearch, depth):
 
 if __name__ == "__main__":
 
-    buildQuery("google", 0)
+    buildQuery("Maple surup", 0)

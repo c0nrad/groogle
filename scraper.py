@@ -13,8 +13,14 @@ class Scraper:
         self.mBr = mechanize.Browser()
         self.mBr.set_handle_robots(False)
         self.mBr.addheaders = [('User-agent', 'Mozilla/5.0')]
+        self.isBad = False
+        
+        try:
+            self.mHTML = self.mBr.open(url).read()
+        except:
+            self.isBad = True
+            return
 
-        self.mHTML = self.mBr.open(url).read()
         self.mSoup = BeautifulSoup(self.mHTML)
 
 

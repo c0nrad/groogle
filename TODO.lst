@@ -1,0 +1,16 @@
+Todo List (Ordered by priority)
+
+---All---:
+- Make sure all functions are properly using the "[+], [*]" interface for debugging.
+
+  - [*] Is for the start of a function
+  - [+] Is an information update saying that all is going according to plan
+  - [-] Is when a problem occurs and is hopefully handled
+
+- Finish commenting code, make sure to finalize style guidelines
+
+
+
+---googleDriver.py----
+Put into 
+
