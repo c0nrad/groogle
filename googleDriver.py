@@ -28,10 +28,11 @@ def googleSearch(search):
     html = br.open(url).read()
     soup = BeautifulSoup(html, "html5lib")
 
+    links = []
     for link in soup.findAll('a', attrs={'href': re.compile("^/url\?q=")}):
-        temp = re.split("\/url\?q=([^&]+)\&.*", link['href'])
-        print temp[1]
+        links.append(re.split("\/url\?q=([^&]+)\&.*", link['href'])[1])
     
+    return links
 
 
 # googleImageSearch(string search):
