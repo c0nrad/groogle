@@ -71,7 +71,7 @@ class Parser:
 def main():
     """Simple main method for testing purposes"""
     parser = Parser()
-    parser.parse("Adam Funkenbusch is the c\"oolest dude on pl.anet earth")
+    parser.parse("Adam Funkenbusch is the c\"oolest dude on pl.anet earth!")
     print parser.nouns
 
 if __name__ == "__main__":

@@ -4,12 +4,13 @@
 import scraper
 import parser
 import query
+import googleDriver
 
 def buildQuery(googleSearch, depth):
     print "[*] buildQuery:", googleSearch
     
-    print "[+] Running googleDriver (sort of)"
-    googleURLs = ["http://www.google.com", "http://www.yahoo.com"] # googleDriver.search(googleSearch)
+    print "[+] Running googleDriver"
+    googleURLs = googleDriver.googleSearch(googleSearch)
     for url in googleURLs:
         q = query.Query()
         q.mGoogleQuery = googleSearch

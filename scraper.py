@@ -9,9 +9,14 @@ from bs4 import BeautifulSoup
 class Scraper:
 
     def __init__(self, url):
+        # Open a browser and pretend to not be a robot
         self.mBr = mechanize.Browser()
+        self.mBr.set_handle_robots(False)
+        self.mBr.addheaders = [('User-agent', 'Mozilla/5.0')]
+
         self.mHTML = self.mBr.open(url).read()
         self.mSoup = BeautifulSoup(self.mHTML)
+
 
     def getTitle(self):
         return self.mSoup.title.string
