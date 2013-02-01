@@ -42,4 +42,4 @@ def buildQuery(googleSearch, depth):
 
 if __name__ == "__main__":
 
-    buildQuery("Maple surup", 0)
+    buildQuery("Dark Side", 0)

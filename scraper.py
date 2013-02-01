@@ -10,6 +10,7 @@ class Scraper:
 
     def __init__(self, url):
         # Open a browser and pretend to not be a robot
+        self.mURL = url
         self.mBr = mechanize.Browser()
         self.mBr.set_handle_robots(False)
         self.mBr.addheaders = [('User-agent', 'Mozilla/5.0')]
@@ -25,7 +26,11 @@ class Scraper:
 
 
     def getTitle(self):
-        return self.mSoup.title.string
+        if type(self.mSoup.title) == None or self.mSoup.title == None:
+            print "[-] Bad title for:", self.mURL
+            return ""
+        else:
+            return (self.mSoup.title.string or "")
 
     def getHtml(self):
         return self.mHTML        
