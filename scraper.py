@@ -4,7 +4,7 @@
 
 import mechanize
 import re
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 class Scraper:
 
@@ -20,7 +20,7 @@ class Scraper:
         return self.mHTML        
 
     def getText(self):
-
+        pass
         #print self.mSoup.findAll(text=True)
 
     # getLinks(string html)
