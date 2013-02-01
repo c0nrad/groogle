@@ -1,20 +1,22 @@
 """@package parser
 
 The parser is used to take plain html and return the important words.
+
+@note This really doesn't need to be used as a class, it's only used in a
+      static context form.
 """
-import nltk # TODO: Look into licensing issues
+import nltk # @TODO Look into licensing issues
 import string
 
 class Parser:
     
     def __init__(self):
-        self.nouns = []
-        self.mNounHist = dict()
+        """pass"""
+        pass
 
     def parse(self, words):
-        """
-        Main parser function for parser class, removes all the cluter, and returns
-        all the important words.
+        """ Main parser function for parser class, removes all the cluter, 
+        and returns all the important words.
 
         @param words Single string of html
         @retval Histogram in the form { word(string) : count (int) }
@@ -43,9 +45,23 @@ class Parser:
         return wordsHist
 
     def cleanHTML(self, words):
+        """
+        A wrapper for a nltk 'clean_html' function. Cuts out all the 
+        html tags and other crap.
+
+        @param words A string of the html
+        @retval Nice clean user text
+        """
         return nltk.clean_html(words)
 
     def selectNLTKNouns(self, words):
+        """
+        A wrapper for the nltk tag methods. Currently one grabs "NN" which
+        are nouns.
+
+        @param words A string of text
+        @retval A list([string]) of the nouns
+        """
         out = []
         words = " ".join(words)
         words = nltk.word_tokenize(words)
@@ -56,6 +72,13 @@ class Parser:
         return out
 
     def removeDirtyContains(self, words):
+        """
+        Check to see if any of the words contain punctuation, and if so
+        it removes those words from the list.
+
+        @param words The words to be looked over ([string])
+        @retval The clean words ([string])
+        """
         out = []
         dirtyContains = string.punctuation
 
@@ -72,13 +95,19 @@ class Parser:
         return out
 
     def removeDirtyWords(self, words):
+        """
+        Removes words that are commonly known to be bad
+        
+        @param words The word list to be cleaned ([string])
+        @retval The cleaned words ([string])
+        """
+        dirtyWords = ["b", "class"]
         pass
         
 def main():
-    """Simple main method for testing purposes"""
+    """For testing purposes"""
     parser = Parser()
     parser.parse("Adam Funkenbusch is the c\"oolest dude on pl.anet earth!")
-    print parser.nouns
 
 if __name__ == "__main__":
     main()
