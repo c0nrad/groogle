@@ -9,11 +9,15 @@ Todo List (Ordered by priority)
 
 - Finish commenting code, make sure to finalize style guidelines
 
+- Write a README
+
+
 ---googleDriver.py----
 - Put into a class
 - Add support for google hacks, e.x. infile: +"lol" filetype:.pdf
 - Add support for images
 - Add support for videos
+- Grab the "Did you mean..." for typos 
 
 ---scraper.py---
 - Finish methods that aren't implemented, like gathering the images
