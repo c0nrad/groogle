@@ -5,12 +5,14 @@ import scraper
 import parser
 import query
 import googleDriver
+import analyzer
 
 def buildQuery(googleSearch, depth):
     WARNING = '\033[93m'
     NORMAL = '\033[0m'
 
     print "[*] buildQuery:", googleSearch, "depth:", depth
+    queries = []
     
     googleURLs = googleDriver.googleSearch(googleSearch)
     print "[+] googleDriver found hits:", len(googleURLs)
@@ -45,6 +47,14 @@ def buildQuery(googleSearch, depth):
         print "[+] Finished query for:", q.mURL
         print q, "\n"
 
+        queries.append(q)
+
+    return queries
 if __name__ == "__main__":
-    
-    buildQuery("Darth Vader", 0)
+
+    googleSearch = "apple"    
+    print "[*] Doing analysis on the google search:", googleSearch
+    queries = buildQuery(googleSearch, 0)
+    anal = analyzer.Analyzer(queries)
+    topWords = anal.getTopWords(10)
+    print "[*] Top words for", googleSearch,  ":", topWords
