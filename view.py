@@ -9,21 +9,23 @@ from PyQt4.QtGui import *
 from PyQt4 import *
 
 import time
+import node
+import pdb
 
 
-
-class Example(QtGui.QWidget):
+class View(QtGui.QWidget):
     
     def __init__(self):
-        super(Example, self).__init__()
-        
-        self.mScene = QGraphicsScene()
+        super(View, self).__init__()
+        self.NODES_PER_LEVEL = 5
+    
+        self.mScene =  QGraphicsScene(0, 0, 600, 500)
         self.mView = QGraphicsView(self.mScene)
         self.mNodes = []
         self.mLinks = []
 
         self.initUI()        
-        self.addNode()
+        self.addNode(100, 100, "LOL")
 
     def initUI(self):      
 
@@ -36,33 +38,30 @@ class Example(QtGui.QWidget):
 
         self.show()
 
-    def addNode(self):
-        ellipse = QGraphicsEllipseItem()
-        ellipse.setRect(100, 100, 100, 100)
-        self.mScene.addItem(ellipse)
 
-    def drawRectangles(self, qp):
-      
-        color = QtGui.QColor(0, 0, 0)
-        color.setNamedColor('#d4d4d4')
-        qp.setPen(color)
+    def addNode(self, x, y, name):
+        print "[*] Adding node \"", name, "\" at X:", x, "Y:", y, 
+        sys.stdout.flush()
 
-        qp.setBrush(QtGui.QColor(200, 0, 0))
-        qp.drawRect(10, 15, 90, 60)
+        mNode = node.Node(self)
+        
+        mNode.setPos(QPoint(x, y));
 
-        qp.setBrush(QtGui.QColor(255, 80, 0, 160))
-        qp.drawRect(130, 15, 90, 60)
+        self.mScene.addItem(mNode);
 
-        qp.setBrush(QtGui.QColor(25, 0, 90, 200))
-        qp.drawRect(250, 15, 90, 60)
-              
+        mNode.setSelected(True);
+        mNode.setVisible(True)
+        
+        self.mNodes.append(mNode);
+        
         
 def main():
     
     app = QtGui.QApplication(sys.argv)
-    ex = Example()
+    view = View()
     sys.exit(app.exec_())
 
+    n = node.Node()
 
 if __name__ == '__main__':
     main()

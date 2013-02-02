@@ -91,12 +91,12 @@ def buildQueryProgressBar(googleSearch, depth):
 
 if __name__ == "__main__":
 
-    googleSearch = "Microsoft"    
+    googleSearch = " +\"Adam Funkenbusch\" MTU "    
     print "[*] Doing analysis on the google search:", googleSearch
     
     # TRY USING THE PROGRESS BAR. It's dumb but maybe
-    #queries = buildQueryProgressBar(googleSearch, 0)
-    queries = buildQuery(googleSearch, 0)
+    queries = buildQueryProgressBar(googleSearch, 0)
+    #queries = buildQuery(googleSearch, 0)
     
     anal = analyzer.Analyzer(queries)
     topWords = anal.getTopWords(10)
