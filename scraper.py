@@ -16,6 +16,10 @@ class Scraper:
         self.mBr.addheaders = [('User-agent', 'Mozilla/5.0')]
         self.isBad = False
         
+        if not self.isHTML(url):
+            self.isBad = True
+            return
+
         try:
             self.mHTML = self.mBr.open(url).read()
         except:
@@ -24,7 +28,6 @@ class Scraper:
 
         self.mSoup = BeautifulSoup(self.mHTML)
 
-
     def getTitle(self):
         if type(self.mSoup.title) == None or self.mSoup.title == None:
             print "[-] Bad title for:", self.mURL
@@ -32,27 +35,76 @@ class Scraper:
         else:
             return (self.mSoup.title.string or "")
 
-    def getHtml(self):
+    def getHtml(self):        
         return self.mHTML        
 
-    # getLinks(string html)
-    #
-    # Returns a list of urls found the html
     def getLinks(self):
-        #for link in self.mBr.links():
-        #    print link.url
         out = []
         for link in self.mSoup.findAll('a', attrs={'href': re.compile("^http://")}):
             out.append(str(link["href"])) # XXX: Returns unicode
         return out
 
-    def getImageLinks(self):
+    def checkLinkExtensions(self, links):
+        for link in links:
+            if (not self.isHTML(link)) and (not self.isImage(link)) and (not self.isVideo(link)) and (not self.isDoc(link)):
+                print "[-] Unkown link type:", link
+
+    def getHTMLLinks(self, links):
         out = []
+        for link in links:
+            if self.isHTML(link):
+                out.append(link)
         return out
-    # scrapeAll(string url, int depth, int indent)
-    # 
-    # Given a url, it reqursively finds all urls and retreives all html into one giant chunck of text
-    # The depth parameter is used to specify how many urls deep it should search.
+
+    def getImageLinks(self, links):
+        out = []
+        for link in links:
+            if self.isImage(link):
+                out.append(link)        
+        return out
+
+    def getDocLinks(self):
+        out = []
+        for link in links:
+            if self.isDoc(link):
+                out.append(link)
+        return out
+
+    def getVideoLinks(self, links):
+        out = []
+        for link in links:
+            if self.isVideo(link):
+                out.append(link)
+        return out
+
+    def isImage(self, url):
+        imageTypes = [ "png", "jpg", "jpeg", "gif" ]
+        if url.split('.')[-1].lower() in imageTypes:
+            return True
+        else:
+            return False
+
+    # @XXX: Fix me
+    def isHTML(self, url):
+        if (not self.isImage(url)) and (not self.isDoc(url)) and (not self.isVideo(url)):
+            return True
+        else:
+            return False
+
+    def isVideo(self, url):
+        videoTypes = [ "avi", "wmv", "mp4", "wav" ]
+        if url.split('.')[-1].lower() in videoTypes:
+            return True
+        else:
+            return False
+    
+    def isDoc(self, url):
+        docTypes = [ "doc", "pdf", "docx", "ppt", "ps" ]
+        if url.split('.')[-1].lower() in docTypes:
+            return True
+        else:
+            return False
+
     def scrapeAll(self, url, depth, indent = 0):
         print "[*]" + "\t" * indent, "Scraping", url, "with depth", depth
         if depth == 0:
@@ -65,24 +117,14 @@ class Scraper:
             return outData
 
 if __name__ == "__main__":
-    scraper = Scraper()
-    data= scraper.scrapeAll("http://www.google.com", 2)
+    scraper = Scraper("http://google.com")
 
-# getPlain(string url):
-#   
-# Takes the string url, and returns all the text (string []). All newly
-# found urls are added to the url queue for later sorting through. 
-# If the depth is already at the max, then new urls should not 
-# be added to the queue
-MAX_URL_DEPTH=2
-
-def getPlain(url, depth):
-    pass
-
-
-# getImage(string url):
-#   
-# Takes the string url and returns the image (pyImage?). 
-
-def getImage(url):
-    pass
+    assert scraper.isVideo("http://www.pornhub.com/100babesAndAdam.avi")
+    assert scraper.isImage("www.adamIsSexy.com/awwYeah.jpg")
+    assert scraper.isDoc("http://www.myBankMoney.com/brokeAsShit.doc")
+    assert not scraper.isVideo("http://www.google.com/search+=lolololnowd")
+    assert not scraper.isDoc("http://www.broomball.mtu.edu/team/view/49904")
+    assert not scraper.isVideo("http://www.broomball.mtu.edu/team/view/49904")
+    assert not scraper.isImage("http://www.broomball.mtu.edu/team/view/49904")
+    assert scraper.isHTML("http://www.broomball.mtu.edu/team/view/49904")
+    

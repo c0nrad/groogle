@@ -18,7 +18,7 @@ class Query:
         self.mHTML = ""
 
     def __str__(self):
-        out = self.mTitle + "\n"
+        out = repr(self.mTitle) + "\n"
         out += "URL: " + self.mURL + "\n"
         out += "mImageURLs: " + str(self.mImageURLs) + "\n"
         out += "mVideoURLs: " + str(self.mVideoURLs) + "\n"

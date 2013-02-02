@@ -7,7 +7,10 @@ import query
 import googleDriver
 
 def buildQuery(googleSearch, depth):
-    print "[*] buildQuery:", googleSearch
+    WARNING = '\033[93m'
+    NORMAL = '\033[0m'
+
+    print "[*] buildQuery:", googleSearch, "depth:", depth
     
     googleURLs = googleDriver.googleSearch(googleSearch)
     print "[+] googleDriver found hits:", len(googleURLs)
@@ -19,19 +22,21 @@ def buildQuery(googleSearch, depth):
         
         print "[+] Grabbing html for:", q.mURL
         scrape = scraper.Scraper(q.mURL)
-        if scrape.isBad:
-            print "[-] Skipping bad url:", q.mURL, "\n"
+        if not scrape.isHTML(q.mURL):
+            print WARNING + "[-] Skipping, not html:", q.mURL, "\n", NORMAL
             continue
-        q.mHTML = scrape.getHtml()
+        if scrape.isBad:
+            print WARNING + "[-] Skipping bad url:", q.mURL, "\n", NORMAL
+            continue
 
         print "[+] Grabbing title for:", q.mURL
         q.mTitle = scrape.getTitle()
         
-        print "[+] Grabbing html urls for:", q.mURL
-        q.mHTMLURLs = scrape.getLinks()
-
-        print "[+] Grabbing image urls for:", q.mURL
-        q.mImageURLs = scrape.getImageLinks()
+        print "[+] Grabbing urls for:", q.mURL
+        links = scrape.getLinks();
+        q.mHTMLURLs = scrape.getHTMLLinks(links)
+        q.mImageURLs = scrape.getImageLinks(links)
+        q.mVideoURLs = scrape.getVideoLinks(links)
 
         print "[+] Parsing Keywords"
         parse = parser.Parser()
@@ -41,5 +46,5 @@ def buildQuery(googleSearch, depth):
         print q, "\n"
 
 if __name__ == "__main__":
-
-    buildQuery("Dark Side", 0)
+    
+    buildQuery("Darth Vader", 0)

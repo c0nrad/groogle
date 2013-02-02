@@ -9,8 +9,14 @@ Todo List (Ordered by priority)
 
 - Finish commenting code, make sure to finalize style guidelines
 
+- Write unit test for things that can be unit tested
+
 - Write a README
 
+- UNICODE safe
+
+- Write a debug interface
+  - Colors, look at groogle, I added a color example for the warnings
 
 ---googleDriver.py----
 - Put into a class
@@ -20,7 +26,6 @@ Todo List (Ordered by priority)
 - Grab the "Did you mean..." for typos 
 
 ---scraper.py---
-- Finish methods that aren't implemented, like gathering the images
 - Extend the functionality of beautifulsoup/mechanize
 
 ---parser.py---
@@ -38,3 +43,6 @@ Todo List (Ordered by priority)
 
 ---query.py---
 - Ionno, more helper functions
+
+---analysis.py---
+
