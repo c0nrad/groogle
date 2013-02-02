@@ -10,7 +10,7 @@ class Analyzer:
         self.mKeywordHist = self.combineKeywords(self.mQueries)
 
     def combineKeywords(self, queries):
-        print "[*] Combining keywords for queries, count:", len(queries)
+        print "[*] Combining keywords for queries, query count:", len(queries)
         keywordHist = dict()
         for q in queries:
             for keyword in q.mKeywordHist:
@@ -35,7 +35,7 @@ class Analyzer:
     def getTopVideos(self, count):
         pass
 
-    def updateView(self, number):
+    def updateView(self, view):
         pass
 
     

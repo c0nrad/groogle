@@ -21,7 +21,7 @@ class Parser:
         @param words Single string of html
         @retval Histogram in the form { word(string) : count (int) }
         """
-        print "\n[*] Parsing words, count:", len(words.split())        
+        #print "\n[*] Parsing words, count:", len(words.split())        
 
         words = str(self.cleanHTML(words)).split()
         #print "[+] After cleaning up html:", len(words))
@@ -38,7 +38,7 @@ class Parser:
                 wordsHist[word] = 1
             else:
                 wordsHist[word] += 1
-        print "[+] After removing duplicates:", len(wordsHist)
+        #print "[+] After removing duplicates:", len(wordsHist)
 
         #print "[+] Sorting dictionary\n"
         wordsHist = sorted([(value,key) for (key,value) in wordsHist.items()], reverse=True)

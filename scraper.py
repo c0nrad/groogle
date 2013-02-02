@@ -5,6 +5,7 @@
 import mechanize
 import re
 from bs4 import BeautifulSoup
+import sys
 
 class Scraper:
 
@@ -30,7 +31,7 @@ class Scraper:
 
     def getTitle(self):
         if type(self.mSoup.title) == None or self.mSoup.title == None:
-            print "[-] Bad title for:", self.mURL
+            #print "[-] Bad title for:", self.mURL
             return ""
         else:
             return (self.mSoup.title.string or "")

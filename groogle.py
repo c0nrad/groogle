@@ -6,6 +6,8 @@ import parser
 import query
 import googleDriver
 import analyzer
+import sys
+
 
 def buildQuery(googleSearch, depth):
     WARNING = '\033[93m'
@@ -50,11 +52,52 @@ def buildQuery(googleSearch, depth):
         queries.append(q)
 
     return queries
+
+def buildQueryProgressBar(googleSearch, depth):
+    
+    queries = []
+    googleURLs = googleDriver.googleSearch(googleSearch)[0:10]
+    
+    print "Progress: [",
+    sys.stdout.flush()
+    for url in googleURLs:
+        q = query.Query()
+        q.mGoogleQuery = googleSearch
+        q.mDepth = depth
+        q.mURL = url
+        
+        scrape = scraper.Scraper(q.mURL)
+        if not scrape.isHTML(q.mURL):
+            continue
+        if scrape.isBad:
+            continue
+
+        q.mTitle = scrape.getTitle()
+        
+        links = scrape.getLinks();
+        q.mHTMLURLs = scrape.getHTMLLinks(links)
+        q.mImageURLs = scrape.getImageLinks(links)
+        q.mVideoURLs = scrape.getVideoLinks(links)
+
+        parse = parser.Parser()
+        q.mKeywordHist = parse.parse(scrape.mHTML)
+        
+        queries.append(q)
+        print "*",
+        sys.stdout.flush()
+
+    print "]"
+    return queries
+
 if __name__ == "__main__":
 
-    googleSearch = "apple"    
+    googleSearch = "Microsoft"    
     print "[*] Doing analysis on the google search:", googleSearch
+    
+    # TRY USING THE PROGRESS BAR. It's dumb but maybe
+    #queries = buildQueryProgressBar(googleSearch, 0)
     queries = buildQuery(googleSearch, 0)
+    
     anal = analyzer.Analyzer(queries)
     topWords = anal.getTopWords(10)
     print "[*] Top words for", googleSearch,  ":", topWords
