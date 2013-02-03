@@ -29,9 +29,6 @@ class Node(QtGui.QGraphicsItem):
 #    def removeLink(self, link):
 #        mLinks.remove(link);
 
-
-#--------------------
-#-- Ellipse
     def outlineRect(self):
         size = 60;
         roundness = 30
@@ -50,7 +47,6 @@ class Node(QtGui.QGraphicsItem):
         path = QtGui.QPainterPath()
         path.addEllipse(rect);
         return path;
-
 
     def paint(self, painter, option, widget):
         pen = QtGui.QPen(self.mOutlineColor);

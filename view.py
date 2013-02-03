@@ -18,18 +18,20 @@ class View(QtGui.QWidget):
     def __init__(self):
         super(View, self).__init__()
         self.NODES_PER_LEVEL = 5
+        self.SCENE_HEIGHT = 600
+        self.SCENE_WIDTH = 900
     
-        self.mScene =  QGraphicsScene(0, 0, 600, 500)
+        self.mScene =  QGraphicsScene(0, 0, self.SCENE_WIDTH, self.SCENE_HEIGHT)
         self.mView = QGraphicsView(self.mScene)
         self.mNodes = []
         self.mLinks = []
 
         self.initUI()        
-        self.addNode(100, 100, "LOL")
 
     def initUI(self):      
-
-        self.setGeometry(200, 200, 900, 800)
+        
+        adjust = 200
+        self.setGeometry(adjust, adjust, self.SCENE_WIDTH +adjust, self.SCENE_HEIGHT + adjust)
         self.setWindowTitle('Groogle')
 
         layout = QVBoxLayout()
@@ -56,12 +58,14 @@ class View(QtGui.QWidget):
         
         
 def main():
-    
     app = QtGui.QApplication(sys.argv)
     view = View()
+    view.addNode(view.SCENE_WIDTH / 2 , view.SCENE_HEIGHT / 2, "groogle")
+
+
+
     sys.exit(app.exec_())
 
-    n = node.Node()
 
 if __name__ == '__main__':
     main()
