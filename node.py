@@ -12,6 +12,8 @@ class Node(QtGui.QGraphicsItem):
         super(Node, self).__init__()
 
         self.mName = ""
+        self.mLinks = ""
+
         self.update()
         self.mTextColor = Qt.Qt.darkGreen;
         self.mOutlineColor = Qt.Qt.darkBlue;
@@ -23,16 +25,13 @@ class Node(QtGui.QGraphicsItem):
         self.setAcceptHoverEvents(True);
         self.setAcceptDrops(True);
 
-#    def addLink(self, link):
-#        mLinks.insert(link);
+    def addLink(self, link):
+        mLinks.append(link);
      
-#    def removeLink(self, link):
-#        mLinks.remove(link);
-
     def outlineRect(self):
         size = 60;
         roundness = 30
-        rect = QtCore.QRectF(-size, -size, size + roundness, size);
+        rect = QtCore.QRectF(-size + roundness/2, -size + size/2, size + roundness, size); #yea ionno,but it works
     
         if (self.mIsHovered):
             rect.adjust(-5, -5, 5, 5);

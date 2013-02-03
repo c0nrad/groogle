@@ -33,8 +33,9 @@ Todo List (Ordered by priority)
 - Add some words for the dirtyWords list, and implement it. Such as the word "b"
 - Look into licensing issues for nltk
 
----view.py---
-- Actually having a view would be nice
+---groogleView.py---
+- Add link class
+http://www.qtcentre.org/wiki/index.php?title=QGraphicsView:_Smooth_Panning_and_Zooming
 
 ---groogle.py---
 - Add functionality for depth
