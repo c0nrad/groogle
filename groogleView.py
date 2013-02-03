@@ -130,14 +130,22 @@ def main():
     topWords = anal.getTopWords(4)
     print "[*] Top words for", googleSearch,  ":", topWords
 
+
     # Start the viewer
     app = QtGui.QApplication(sys.argv)
     groogleView = GroogleView() 
     center = groogleView.addCenterNode(googleSearch)
     groogleView.addNodes(topWords, 1)
 
-    time.sleep()
-    # Let the app run
+
+    # Add a sub branch
+    n = groogleView.findNode("computer")
+    queries = groogle.buildQuery("raspberry pi computer", 0)
+    anal = analyzer.Analyzer(queries)
+    topWords = anal.getTopWords(4)
+    groogleView.addNodes(topWords, 2, n)
+
+    
     sys.exit(app.exec_())
 
 def test():
@@ -171,8 +179,7 @@ if __name__ == '__main__':
     
     
 
-    test()
-
-#    main()
+ #   test()
+    main()
 
     
