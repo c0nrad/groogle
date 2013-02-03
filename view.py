@@ -44,7 +44,7 @@ class View(QtGui.QWidget):
         sys.stdout.flush()
 
         mNode = node.Node(self)
-        
+        mNode.mName = name
         mNode.setPos(QPoint(x, y));
 
         self.mScene.addItem(mNode);
