@@ -6,6 +6,17 @@ import parser
 import query
 import googleDriver
 import analyzer
+
+
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyQt4 import *
+
+import time
+import node
+import pdb
+
+
 import sys
 
 
@@ -95,9 +106,11 @@ if __name__ == "__main__":
     print "[*] Doing analysis on the google search:", googleSearch
     
     # TRY USING THE PROGRESS BAR. It's dumb but maybe
-    queries = buildQueryProgressBar(googleSearch, 0)
-    #queries = buildQuery(googleSearch, 0)
+    #queries = buildQueryProgressBar(googleSearch, 0)
+    queries = buildQuery(googleSearch, 0)
+    
     
     anal = analyzer.Analyzer(queries)
     topWords = anal.getTopWords(10)
     print "[*] Top words for", googleSearch,  ":", topWords
+
