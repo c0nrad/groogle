@@ -21,7 +21,7 @@ class GroogleView(QtGui.QWidget):
     
     def __init__(self):
         super(GroogleView, self).__init__()
-        self.NODES_PER_LEVEL = 4
+        self.NODES_PER_LEVEL = 10
         self.NODE_MAGNITUDE = 200
 
         self.SCENE_HEIGHT = 600
@@ -98,7 +98,7 @@ class GroogleView(QtGui.QWidget):
         if baseNode == "":
             baseNode = self.mCenterNode
 
-        deltaAngle = 360 / math.pow(2, level + 1)
+        deltaAngle = 360 / math.pow(self.NODES_PER_LEVEL, level)
         print "deltaAngle:", deltaAngle
         
         if level == 1:
@@ -127,7 +127,7 @@ def main():
     # Scrape and do analysis
     queries = groogle.buildQuery(googleSearch, 0)
     anal = analyzer.Analyzer(queries)
-    topWords = anal.getTopWords(4)
+    topWords = anal.getTopWords(10)
     print "[*] Top words for", googleSearch,  ":", topWords
 
 
@@ -139,11 +139,11 @@ def main():
 
 
     # Add a sub branch
-    n = groogleView.findNode("computer")
-    queries = groogle.buildQuery("raspberry pi computer", 0)
-    anal = analyzer.Analyzer(queries)
-    topWords = anal.getTopWords(4)
-    groogleView.addNodes(topWords, 2, n)
+#    n = groogleView.findNode("computer")
+#    queries = groogle.buildQuery("raspberry pi computer", 0)
+#    anal = analyzer.Analyzer(queries)
+#    topWords = anal.getTopWords(4)
+#    groogleView.addNodes(topWords, 2, n)
 
     
     sys.exit(app.exec_())

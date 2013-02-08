@@ -7,11 +7,13 @@ The parser is used to take plain html and return the important words.
 """
 import nltk # @TODO Look into licensing issues
 import string
+import pdb
 
 class Parser:
     
     def __init__(self):
         """pass"""
+        # Read in the dirty words into a buffer
         pass
 
     def parse(self, words):
@@ -21,16 +23,19 @@ class Parser:
         @param words Single string of html
         @retval Histogram in the form { word(string) : count (int) }
         """
-        #print "\n[*] Parsing words, count:", len(words.split())        
+        print "\n[*] Parsing words, count:", len(words.split())        
 
         words = str(self.cleanHTML(words)).split()
-        #print "[+] After cleaning up html:", len(words))
+        print "[+] After cleaning up html:", len(words)
 
         words = self.removeDirtyContains(words)
-        #print "[+] After removing dirty contains:", len(words))
+        print "[+] After removing dirty contains:", len(words)
 
-        words = self.selectNLTKNouns(words)
-        #print "[+] After selecting nltk NN tag", len(words)
+#        words = self.selectNLTKNouns(words)
+#        print "[+] After selecting nltk NN tag", len(words)
+
+        words = self.removeDirtyWords(words)
+        print "[+] After removing dirty words:", len(words)
 
         wordsHist = dict()
         for word in words:
@@ -38,9 +43,8 @@ class Parser:
                 wordsHist[word] = 1
             else:
                 wordsHist[word] += 1
-        #print "[+] After removing duplicates:", len(wordsHist)
+        print "[+] After removing duplicates:", len(wordsHist)
 
-        #print "[+] Sorting dictionary\n"
         wordsHist = sorted([(value,key) for (key,value) in wordsHist.items()], reverse=True)
         return wordsHist
 
@@ -79,8 +83,10 @@ class Parser:
         @param words The words to be looked over ([string])
         @retval The clean words ([string])
         """
+
         out = []
         dirtyContains = string.punctuation
+        dirtyContains += string.digits
 
         for word in words:
             isDirty = False
@@ -101,8 +107,20 @@ class Parser:
         @param words The word list to be cleaned ([string])
         @retval The cleaned words ([string])
         """
-        dirtyWords = ["b", "class"]
-        pass
+        out = []
+        dirtyWords = []
+
+        WORDS_FILE = "dirtyWords.txt"
+        for w in open(WORDS_FILE):
+            dirtyWords.append(str(w).strip())
+
+        for word in words:
+            if not word.lower() in dirtyWords:
+                out.append(word)
+                continue
+            else:
+                print word.lower()
+        return out
         
 def main():
     """For testing purposes"""
@@ -112,3 +130,4 @@ def main():
 if __name__ == "__main__":
     main()
 
+    
