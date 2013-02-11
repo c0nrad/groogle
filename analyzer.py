@@ -2,32 +2,29 @@
 #
 # Does analysis on queries and adds them to the view
 import query
+from collections import Counter
 
 class Analyzer:
 
-    def __init__(self, queries):
-        self.mQueries = queries
-        self.mKeywordHist = self.combineKeywords(self.mQueries)
+    def __init__(self):
+        self.mQueries = []
+        self.mKeywordHist = dict()
+        
+    def addQuery(self, query):
+        print "[*] Starting addQuery"
+        for keyword in query.mKeywordHist:
+            if keyword[0] in self.mKeywordHist:
+                self.mKeywordHist[keyword[0]] += keyword[1]
+            else:
+                self.mKeywordHist[keyword[0]] = keyword[1]
 
-    def combineKeywords(self, queries):
-        print "[*] Combining keywords for queries, query count:", len(queries)
-        keywordHist = dict()
-        for q in queries:
-            for keyword in q.mKeywordHist:
-                
-                if keyword[1] in keywordHist:
-                    keywordHist[keyword[1]] += keyword[0]
-                else:
-                    keywordHist[keyword[1]] = keyword[0]
-
-        keywordHist = sorted([(value,key) for (key,value) in keywordHist.items()], reverse=True)
-        return keywordHist
+#        self.mKeywordHist = sorted([(key,value) for (key,value) in self.mKeywordHist.items()], reverse=True)
+        
+        self.mQueries.append(query)
 
     def getTopWords(self, count):
-        words = []
-        for x in range(0, count):
-            words.append(self.mKeywordHist[x][1])
-        return words
+        c = Counter(self.mKeywordHist)
+        return c.most_common()[0:count]
 
     def getTopImages(self, count):
         pass
@@ -35,7 +32,5 @@ class Analyzer:
     def getTopVideos(self, count):
         pass
 
-    def updateView(self, view):
-        pass
 
     

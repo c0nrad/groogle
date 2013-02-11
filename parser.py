@@ -26,16 +26,16 @@ class Parser:
         print "\n[*] Parsing words, count:", len(words.split())        
 
         words = str(self.cleanHTML(words)).split()
-        print "[+] After cleaning up html:", len(words)
+        #print "[+] After cleaning up html:", len(words)
 
         words = self.removeDirtyContains(words)
-        print "[+] After removing dirty contains:", len(words)
+        #print "[+] After removing dirty contains:", len(words)
 
 #        words = self.selectNLTKNouns(words)
 #        print "[+] After selecting nltk NN tag", len(words)
 
         words = self.removeDirtyWords(words)
-        print "[+] After removing dirty words:", len(words)
+        #print "[+] After removing dirty words:", len(words)
 
         wordsHist = dict()
         for word in words:
@@ -45,7 +45,7 @@ class Parser:
                 wordsHist[word] += 1
         print "[+] After removing duplicates:", len(wordsHist)
 
-        wordsHist = sorted([(value,key) for (key,value) in wordsHist.items()], reverse=True)
+        wordsHist = sorted([(key,value) for (key,value) in wordsHist.items()], reverse=True)
         return wordsHist
 
     def cleanHTML(self, words):
@@ -118,8 +118,6 @@ class Parser:
             if not word.lower() in dirtyWords:
                 out.append(word)
                 continue
-            else:
-                print word.lower()
         return out
         
 def main():

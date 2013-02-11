@@ -5,14 +5,21 @@
 
 import sys
 
-from PyQt4 import QtGui, QtCore, Qt
+from PyQt4 import Qt
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyQt4 import *
 
-class Node(QtGui.QGraphicsItem):
+
+
+class Node(QtGui.QGraphicsObject):
     def __init__(self, parent = None):
         super(Node, self).__init__()
 
         self.mName = ""
-        self.mLinks = ""
+        self.mLinks = []
+        self.mChildren = []
+        self.mParent = ""
 
         self.update()
         self.mTextColor = Qt.Qt.darkGreen;
@@ -24,6 +31,7 @@ class Node(QtGui.QGraphicsItem):
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
         self.setAcceptHoverEvents(True);
         self.setAcceptDrops(True);
+        self.setFlag(QtGui.QGraphicsItem.ItemSendsScenePositionChanges, True)
 
     def addLink(self, link):
         mLinks.append(link);
@@ -69,4 +77,15 @@ class Node(QtGui.QGraphicsItem):
     def hoverLeaveEvent(self, event):
         self.mIsHovered = False;
         self.update();
+
+    def mouseDoubleClickEvent(self, event):
+        print "[+] Double click event on:", self.mName, "emitting signal \"doubleClickEvent\""
+        QtCore.QObject.emit(self, QtCore.SIGNAL("doubleClickEvent"), self)
+
+    def itemChange(self, change, value):
+        if (change == QGraphicsItem.ItemPositionHasChanged):
+            newPos = value.toPointF();
+            for link in self.mLinks:
+                link.trackNodes();
+        return QVariant(value)
 

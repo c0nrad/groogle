@@ -14,8 +14,8 @@ class Link(QtGui.QGraphicsLineItem):
         self.mFromNode = fromNode
         self.mToNode = toNode
 
-        #self.mFromNode.addLink(self)
-        #self.mToNode.addLink(self)
+        self.mFromNode.mLinks.append(self)
+        self.mToNode.mLinks.append(self)
         self.setZValue(-1)
         self.mColor = Qt.Qt.darkRed;
         self.trackNodes();

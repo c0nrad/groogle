@@ -7,6 +7,7 @@
 class Query:
     def __init__(self):
         self.mTitle = ""
+        self.mName = ""
         self.mURL = ""
         self.mImageURLs = []
         self.mVideoURLs = []

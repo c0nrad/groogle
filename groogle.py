@@ -7,7 +7,6 @@ import query
 import googleDriver
 import analyzer
 
-
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4 import *
@@ -15,10 +14,7 @@ from PyQt4 import *
 import time
 import node
 import pdb
-
-
 import sys
-
 
 def buildQuery(googleSearch, depth):
     WARNING = '\033[93m'
@@ -62,42 +58,6 @@ def buildQuery(googleSearch, depth):
 
         queries.append(q)
 
-    return queries
-
-def buildQueryProgressBar(googleSearch, depth):
-    
-    queries = []
-    googleURLs = googleDriver.googleSearch(googleSearch)[0:10]
-    
-    print "Progress: [",
-    sys.stdout.flush()
-    for url in googleURLs:
-        q = query.Query()
-        q.mGoogleQuery = googleSearch
-        q.mDepth = depth
-        q.mURL = url
-        
-        scrape = scraper.Scraper(q.mURL)
-        if not scrape.isHTML(q.mURL):
-            continue
-        if scrape.isBad:
-            continue
-
-        q.mTitle = scrape.getTitle()
-        
-        links = scrape.getLinks();
-        q.mHTMLURLs = scrape.getHTMLLinks(links)
-        q.mImageURLs = scrape.getImageLinks(links)
-        q.mVideoURLs = scrape.getVideoLinks(links)
-
-        parse = parser.Parser()
-        q.mKeywordHist = parse.parse(scrape.mHTML)
-        
-        queries.append(q)
-        print "*",
-        sys.stdout.flush()
-
-    print "]"
     return queries
 
 if __name__ == "__main__":

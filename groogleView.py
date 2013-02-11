@@ -11,7 +11,8 @@ import groogle
 import node
 import link
 import analyzer
-
+import model
+from debug import *
 
 import math
 import time
@@ -21,7 +22,7 @@ class GroogleView(QtGui.QWidget):
     
     def __init__(self):
         super(GroogleView, self).__init__()
-        self.NODES_PER_LEVEL = 10
+        self.NODES_PER_LEVEL = 6
         self.NODE_MAGNITUDE = 200
 
         self.SCENE_HEIGHT = 600
@@ -33,6 +34,9 @@ class GroogleView(QtGui.QWidget):
         self.mLinks = []
         self.initUI()        
 
+        googleSearch = "Microsoft"
+        self.mModel = model.Model(self)
+
     def initUI(self):      
         adjust = 200
         self.setGeometry(adjust, adjust, self.SCENE_WIDTH +adjust, self.SCENE_HEIGHT + adjust)
@@ -42,31 +46,42 @@ class GroogleView(QtGui.QWidget):
         self.setLayout(layout)
         self.show()
 
-
     def addCenterNode(self, name):
+        goodMessage("groogleView::addCenterNode: ", name)
         self.mScene.clear()
         n = self.addNode(self.SCENE_WIDTH / 2 , self.SCENE_HEIGHT / 2, name)
         self.mCenterNode = n
         return self.mCenterNode
 
     def addNode(self, x, y, name):
-        print "\n[*] addNode \tname:", name, "\tX:", x, "\tY:", y
+        goodMessage("addNode name: ", name, "X: ", x, "Y: ", y)
         sys.stdout.flush()
         mNode = node.Node(self)
         mNode.mName = name
         mNode.setPos(QPoint(x, y));
-#        mNode.setSelected(True);
         mNode.setVisible(True)
         self.mScene.addItem(mNode);
         self.mNodes.append(mNode);
+
+        # Fragile, fix it
+        self.connect(mNode, SIGNAL("doubleClickEvent"), self.handleDoubleClick)
+
         return mNode
+
+    def handleDoubleClick(self, n):
+        infoMessage("Double click signal recieved from: ", n.mName)
+        self.mModel.generateQueries(n.mName, n.mName + " " + n.mParent.mName, 0)
 
     def findNode(self, name):
         for node in self.mNodes:
-            if node.mName == name:
+            if name.lower() == node.mName.lower():
                 return node
+        return ""
 
     def getPolarCoord(self, node, fromNode = ""):
+#        if not type(node) is node.Node:
+#            errorMessage("googleView::getPolarCoord: node isn't of type node")
+
         if fromNode == "":
             fromNode = self.mCenterNode
 
@@ -78,7 +93,6 @@ class GroogleView(QtGui.QWidget):
         return (magnitude, angle)
 
     def getCartCoord(self, mag, angle, pos):
-        print "\n[*] getCardCoord \tmag:", mag, "\tangle:", angle
         x = mag * math.cos(float(angle)/ 180 * math.pi)
         y = mag * math.sin(float(angle) / 180 * math.pi)
 
@@ -91,95 +105,100 @@ class GroogleView(QtGui.QWidget):
         
         return (round(x + nodeX), round(y + nodeY))
 
+    def removeNode(self, node):
+#        if not type(node) is node.Node:
+#            errorMessage("googleView::removeNode: node isn't of type node")
+
+        infoMessage("Removing node: ", node.mName)
+ 
+        for child in node.mChildren:
+            self.removeChildren(child)
+
+        for link in node.mLinks:
+            self.mScene.removeItem(link)
+        node.mLinks = []
+            
+        if node in self.mScene.items():
+            self.mScene.removeItem(node)
+        else:
+            errorMessage("groogleView::removeNode: removing item not in scene!")
+            
+        if node in self.mNodes:
+            self.mNodes.remove(node)
+        else:
+            errorMessage("groogleView::removeNode: removing item not in mNodes!")
+
+    def removeChildren(self, node):
+        for child in node.mChildren:
+            self.removeNode(child)
+            
+        node.mChildren = []
+
     # Level 0 = Center node
     # Level 1 = first circle of nodes
-    def addNodes(self, words, level, baseNode = ""):
-        assert level >= 1
-        if baseNode == "":
-            baseNode = self.mCenterNode
-
-        deltaAngle = 360 / math.pow(self.NODES_PER_LEVEL, level)
-        print "deltaAngle:", deltaAngle
+    def addNodes(self, centerWord, words):
+        centerNode = self.findNode(centerWord)
+        if centerNode == "":
+            errorMessage("groogleView::addNodes: The center node doesn't exist: ", centerNode)
         
-        if level == 1:
-            angle = 45
-        else:
-            angle = self.getPolarCoord(self.mCenterNode, baseNode)[1]
-            angle -= 60
-            print self.getPolarCoord(self.mCenterNode, baseNode)
+        if len(words) == 0:
+            warningMessage("groogleView::addNodes: no words to be added?")
 
-        for i in range(0, self.NODES_PER_LEVEL):
-            (nodeX, nodeY) = self.getCartCoord(self.NODE_MAGNITUDE, angle, (baseNode.x(), baseNode.y()))      
+        if centerWord in words:
+            warningMessage("groogleView::addNodes: attempting to re-add the center node")
 
-            newNode = self.addNode(nodeX, nodeY, words[i])
-            l = link.Link(newNode, baseNode)
-            self.mScene.addItem(l)
+        self.removeChildren(centerNode)
+        deltaAngle = 360 / math.pow(self.NODES_PER_LEVEL, 1)
+        angle = 45
+        centerNodePos = (centerNode.x(), centerNode.y())
+        nodeCount = 0
+
+        for wordItem in words:
+            if (nodeCount >= self.NODES_PER_LEVEL):
+                break
+
+            word = wordItem[0]
+            
+            existingNode = self.findNode(word)
+            if not existingNode == "":
+                self.addLink(existingNode, centerNode)
+                continue
+
+            (nodeX, nodeY) = self.getCartCoord(self.NODE_MAGNITUDE, angle, centerNodePos)      
+
+            newNode = self.addNode(nodeX, nodeY, word)
+            newNode.mParent = centerNode
+            centerNode.mChildren.append(newNode)
+            self.addLink(newNode, centerNode)
             self.mNodes.append(newNode)
-            angle += deltaAngle
- 
+                    
+            angle += deltaAngle 
+            nodeCount += 1
+
+    def addLink(self, nodeA, nodeB):
+        if (nodeA == nodeB):
+            errorMessage("groogleView::addLink: nodes can't be the same")
+            return
+        
+        l = link.Link(nodeA, nodeB)
+        self.mScene.addItem(l)
+        return
  
 def main():
 
     # Set Google Query
-    googleSearch = "\"raspberry pi\""    
+    googleSearch = "apple"    
     print "[*] Doing analysis on the google search:", googleSearch
     
-    # Scrape and do analysis
-    queries = groogle.buildQuery(googleSearch, 0)
-    anal = analyzer.Analyzer(queries)
-    topWords = anal.getTopWords(10)
-    print "[*] Top words for", googleSearch,  ":", topWords
-
-
     # Start the viewer
     app = QtGui.QApplication(sys.argv)
-    groogleView = GroogleView() 
-    center = groogleView.addCenterNode(googleSearch)
-    groogleView.addNodes(topWords, 1)
-
-
-    # Add a sub branch
-#    n = groogleView.findNode("computer")
-#    queries = groogle.buildQuery("raspberry pi computer", 0)
-#    anal = analyzer.Analyzer(queries)
-#    topWords = anal.getTopWords(4)
-#    groogleView.addNodes(topWords, 2, n)
-
-    
-    sys.exit(app.exec_())
-
-def test():
-    googleSearch = "groogle"
-    app = QtGui.QApplication(sys.argv)
-    groogleView = GroogleView() 
-    center = groogleView.addCenterNode(googleSearch)
-
-    words = ["LOL", "IMAGOAT", "NOWAI", "H4X0RZ"]
-    groogleView.addNodes(words, 1)
-
-    words2 = ["LOL2", "LOLIMAGOAT", "METWO!!", "GTFO"]
-    n = groogleView.findNode("LOL")
-    groogleView.addNodes(words2, 2, n)
-
-    m = groogleView.findNode("IMAGOAT")
-    groogleView.addNodes(words2, 2, m)
-
-    o = groogleView.findNode("NOWAI")
-    groogleView.addNodes(words2, 2, o)
-
-    p = groogleView.findNode("H4X0RZ")
-    groogleView.addNodes(words2, 2, p)
-
-    
+    groogleView = GroogleView()
+    groogleView.addCenterNode(googleSearch)
+    groogleView.mModel.generateQueries(googleSearch, googleSearch, 0)
 
     sys.exit(app.exec_())
 
-
-if __name__ == '__main__':
-    
-    
-
- #   test()
+if __name__ == '__main__':    
     main()
 
     
