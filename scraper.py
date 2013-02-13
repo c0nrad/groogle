@@ -31,7 +31,6 @@ class Scraper:
 
     def getTitle(self):
         if type(self.mSoup.title) == None or self.mSoup.title == None:
-            #print "[-] Bad title for:", self.mURL
             return ""
         else:
             return (self.mSoup.title.string or "")
@@ -51,31 +50,19 @@ class Scraper:
                 print "[-] Unkown link type:", link
 
     def getHTMLLinks(self, links):
-        out = []
-        for link in links:
-            if self.isHTML(link):
-                out.append(link)
+        out = [link for link in links if self.isHTML(link)]
         return out
 
     def getImageLinks(self, links):
-        out = []
-        for link in links:
-            if self.isImage(link):
-                out.append(link)        
+        out = [link for link in links if self.isImage(link)]
         return out
 
     def getDocLinks(self):
-        out = []
-        for link in links:
-            if self.isDoc(link):
-                out.append(link)
+        out = [link for link in links if self.isDoc(link)]
         return out
 
     def getVideoLinks(self, links):
-        out = []
-        for link in links:
-            if self.isVideo(link):
-                out.append(link)
+        out = [link for link in links if self.isVideo(link)]
         return out
 
     def isImage(self, url):
@@ -128,4 +115,3 @@ if __name__ == "__main__":
     assert not scraper.isVideo("http://www.broomball.mtu.edu/team/view/49904")
     assert not scraper.isImage("http://www.broomball.mtu.edu/team/view/49904")
     assert scraper.isHTML("http://www.broomball.mtu.edu/team/view/49904")
-    

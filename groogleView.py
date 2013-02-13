@@ -32,6 +32,7 @@ class GroogleView(QtGui.QWidget):
         self.mView = QGraphicsView(self.mScene)
         self.mNodes = []
         self.mLinks = []
+        self.mCenterNode = ""
         self.initUI()        
 
         googleSearch = "Microsoft"
@@ -48,6 +49,11 @@ class GroogleView(QtGui.QWidget):
 
     def addCenterNode(self, name):
         goodMessage("groogleView::addCenterNode: ", name)
+
+        if (self.mCenterNode != ""):
+            warningMessage("groogleView::addCenterNode: center node already exist")
+        
+        infoMessage("groogleView::addCenterNode: clearing the scene")
         self.mScene.clear()
         n = self.addNode(self.SCENE_WIDTH / 2 , self.SCENE_HEIGHT / 2, name)
         self.mCenterNode = n

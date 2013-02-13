@@ -55,10 +55,10 @@ class Model:
 
     # Called on a node double click
     def generateQueries(self, name, googleSearch, depth):
-        goodMessage("buildQuery: ", googleSearch, "depth: ", depth)
+        goodMessage("buildQuery: ", googleSearch, " depth: ", depth)
 
         googleURLs = googleDriver.googleSearch(googleSearch)
-        infoMessage("[+] googleDriver found hits: ", len(googleURLs))
+        infoMessage("googleDriver found hits: ", len(googleURLs))
 
         idCount = 0
         for url in googleURLs:
@@ -74,7 +74,7 @@ class Model:
       
     # Threaded!
     def queryConsumer(self):
-        print "[*] Query Consumer Started!"
+        goodMessage("Query Consumer Started!")
         while True:
             query = self.mQueue.get()
             print "\n[+] Processing item title:\"", query.mTitle, "\"googleSearch:", query.mGoogleQuery

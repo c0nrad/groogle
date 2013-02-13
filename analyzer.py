@@ -11,15 +11,12 @@ class Analyzer:
         self.mKeywordHist = dict()
         
     def addQuery(self, query):
-        print "[*] Starting addQuery"
         for keyword in query.mKeywordHist:
             if keyword[0] in self.mKeywordHist:
                 self.mKeywordHist[keyword[0]] += keyword[1]
             else:
                 self.mKeywordHist[keyword[0]] = keyword[1]
 
-#        self.mKeywordHist = sorted([(key,value) for (key,value) in self.mKeywordHist.items()], reverse=True)
-        
         self.mQueries.append(query)
 
     def getTopWords(self, count):
