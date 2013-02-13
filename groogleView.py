@@ -76,7 +76,12 @@ class GroogleView(QtGui.QWidget):
 
     def handleDoubleClick(self, n):
         infoMessage("Double click signal recieved from: ", n.mName)
-        self.mModel.generateQueries(n.mName, n.mName + " " + n.mParent.mName, 0)
+        searchString = ""
+        name = n.mName
+        while not n == "":
+            searchString += n.mName + " "
+            n = n.mParent
+        self.mModel.generateQueries(name, searchString, 0)
 
     def findNode(self, name):
         for node in self.mNodes:
