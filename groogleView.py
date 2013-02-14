@@ -33,10 +33,8 @@ class GroogleView(QtGui.QWidget):
         self.mNodes = []
         self.mLinks = []
         self.mCenterNode = ""
-        self.initUI()        
-
-        googleSearch = "Microsoft"
         self.mModel = model.Model(self)
+        self.initUI()        
 
     def initUI(self):      
         adjust = 200
@@ -60,7 +58,7 @@ class GroogleView(QtGui.QWidget):
         return self.mCenterNode
 
     def addNode(self, x, y, name):
-        goodMessage("addNode name: ", name, "X: ", x, "Y: ", y)
+        goodMessage("addNode name: ", name, " X: ", x, " Y: ", y)
         sys.stdout.flush()
         mNode = node.Node(self)
         mNode.mName = name
@@ -81,7 +79,7 @@ class GroogleView(QtGui.QWidget):
         while not n == "":
             searchString += n.mName + " "
             n = n.mParent
-        self.mModel.generateQueries(name, searchString, 0)
+        self.mModel.generateQueries(name, searchString)
 
     def findNode(self, name):
         for node in self.mNodes:
@@ -90,7 +88,7 @@ class GroogleView(QtGui.QWidget):
         return ""
 
     def getPolarCoord(self, node, fromNode = ""):
-#        if not type(node) is node.Node:
+#        if not isinstance(node, node.Node):
 #            errorMessage("googleView::getPolarCoord: node isn't of type node")
 
         if fromNode == "":
@@ -108,17 +106,15 @@ class GroogleView(QtGui.QWidget):
         y = mag * math.sin(float(angle) / 180 * math.pi)
 
         if node == "":
-            nodeX = 0
-            nodeY = 0
+            (nodeX, nodeY) = (0, 0)
         else:
-            nodeX = pos[0]
-            nodeY = pos[1]
+            (nodeX, nodeY) = (pos[0], pos[1])
         
         return (round(x + nodeX), round(y + nodeY))
 
     def removeNode(self, node):
-#        if not type(node) is node.Node:
-#            errorMessage("googleView::removeNode: node isn't of type node")
+        
+            errorMessage("googleView::removeNode: node isn't of type node")
 
         infoMessage("Removing node: ", node.mName)
  
@@ -205,7 +201,7 @@ def main():
     app = QtGui.QApplication(sys.argv)
     groogleView = GroogleView()
     groogleView.addCenterNode(googleSearch)
-    groogleView.mModel.generateQueries(googleSearch, googleSearch, 0)
+    groogleView.mModel.generateQueries(googleSearch, googleSearch)
 
     sys.exit(app.exec_())
 

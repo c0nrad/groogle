@@ -17,7 +17,7 @@ def main():
     app = QtGui.QApplication(sys.argv)
     view = groogleView.GroogleView()
     view.addCenterNode(googleSearch)
-    view.mModel.generateQueries(googleSearch, googleSearch, 0)
+    view.mModel.generateQueries(googleSearch, googleSearch)
 
     sys.exit(app.exec_())
 

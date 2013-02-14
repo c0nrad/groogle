@@ -1,49 +1,12 @@
-Todo List (Ordered by priority)
+Todo List
 
----All---:
-- Make sure all functions are properly using the "[+], [*]" interface for debugging.
-
-  - [*] Is for the start of a function
-  - [+] Is an information update saying that all is going according to plan
-  - [-] Is when a problem occurs and is hopefully handled
-
-- Finish commenting code, make sure to finalize style guidelines
-
-- Write unit test for things that can be unit tested
-
-- Write a README
-
-- UNICODE safe
-
-- Write a debug interface
-  - Colors, look at groogle, I added a color example for the warnings
-
----googleDriver.py----
-- Put into a class
-- Add support for google hacks, e.x. infile: +"lol" filetype:.pdf
-- Add support for images
-- Add support for videos
-- Grab the "Did you mean..." for typos 
-
----scraper.py---
-- Extend the functionality of beautifulsoup/mechanize
-
----parser.py---
-- Remove the nltk, too slowwww
-- Add some words for the dirtyWords list, and implement it. Such as the word "b"
-- Look into licensing issues for nltk
-
----groogleView.py---
-- Add link class
-http://www.qtcentre.org/wiki/index.php?title=QGraphicsView:_Smooth_Panning_and_Zooming
-
----groogle.py---
-- Add functionality for depth
-- Put into class, have it call view
-- Multithead
-
----query.py---
-- Ionno, more helper functions
-
----analysis.py---
-Takes a list of queries, and generates statistics about them?
+- Make double clicking on nodes more exciting (have it expand dynamically)
+- Highlight path back to parent
+- Information to be shown when node is clicked on/hover
+- Nodes should be as big as their frequency
+- Pop up menu at start to ask for initial search
+- Tabbed searches, also maybe a way of copying them over
+- Zoomin/out and pan handling done exclusivly with mouse
+- Delete nodes with children
+- Fix multithreading issue
+- Add support for facebook and twitter searches only

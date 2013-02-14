@@ -32,6 +32,7 @@ def googleSearch(search):
     for link in soup.findAll('a', attrs={'href': re.compile("^/url\?q=")}):
         links.append(re.split("\/url\?q=([^&]+)\&.*", link['href'])[1])
     
+    # Check to make sure size>NUMBER_OF_URLS
     return links[:NUMBER_OF_URLS_RETURNED]
 
 
