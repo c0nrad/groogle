@@ -6,6 +6,7 @@ import mechanize
 import re
 from bs4 import BeautifulSoup
 import sys
+from debug import *
 
 class Scraper:
 
@@ -41,7 +42,10 @@ class Scraper:
     def getLinks(self):
         out = []
         for link in self.mSoup.findAll('a', attrs={'href': re.compile("^http://")}):
-            out.append(str(link["href"])) # XXX: Returns unicode
+            try:
+                out.append(str(link["href"])) # XXX: Returns unicode
+            except UnicodeEncodeError:
+                warningMessage("scraper::getLinks: UnivodeEncodeError")
         return out
 
     def checkLinkExtensions(self, links):

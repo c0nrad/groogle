@@ -23,7 +23,7 @@ class GroogleView(QtGui.QWidget):
     def __init__(self):
         super(GroogleView, self).__init__()
         self.NODES_PER_LEVEL = 6
-        self.NODE_MAGNITUDE = 200
+        self.NODE_MAGNITUDE = 100
 
         self.SCENE_HEIGHT = 600
         self.SCENE_WIDTH = 900
@@ -113,8 +113,8 @@ class GroogleView(QtGui.QWidget):
         return (round(x + nodeX), round(y + nodeY))
 
     def removeNode(self, node):
-        
-            errorMessage("googleView::removeNode: node isn't of type node")
+        #
+        #    errorMessage("googleView::removeNode: node isn't of type node")
 
         infoMessage("Removing node: ", node.mName)
  
