@@ -8,6 +8,8 @@ Todo List
 - Tabbed searches, also maybe a way of copying them over
 - Zoomin/out and pan handling done exclusivly with mouse
 - Delete nodes with children
-- Fix multithreading issue
 - Add support for facebook and twitter searches only
 - Multiple links per node pair?
+- Double click on node expands all
+- Add seeds
+

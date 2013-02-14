@@ -14,7 +14,6 @@ class Parser:
     
     def __init__(self):
         """pass"""
-        # Read in the dirty words into a buffer
         pass
 
     def parse(self, words):

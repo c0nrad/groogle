@@ -54,6 +54,7 @@ class GroogleView(QtGui.QWidget):
         infoMessage("groogleView::addCenterNode: clearing the scene")
         self.mScene.clear()
         n = self.addNode(self.SCENE_WIDTH / 2 , self.SCENE_HEIGHT / 2, name)
+        n.mIsHighlighted = True
         self.mCenterNode = n
         return self.mCenterNode
 
@@ -69,17 +70,67 @@ class GroogleView(QtGui.QWidget):
 
         # Fragile, fix it
         self.connect(mNode, SIGNAL("doubleClickEvent"), self.handleDoubleClick)
-
+        self.connect(mNode, SIGNAL("singlePressEvent"), self.handlePressEvent)
         return mNode
 
     def handleDoubleClick(self, n):
         infoMessage("Double click signal recieved from: ", n.mName)
-        searchString = ""
-        name = n.mName
-        while not n == "":
-            searchString += n.mName + " "
-            n = n.mParent
-        self.mModel.generateQueries(name, searchString)
+        
+        if len(n.mChildren) == 0:
+            infoMessage("groogleView::infoMessage: no children!")
+            searchString = ""
+            name = n.mName
+            while not n == "":
+                searchString += n.mName + " "
+                n = n.mParent
+            self.mModel.generateQueries(name, searchString)
+        else:
+            infoMessage("groogleView::infoMessage: ", n.mName, " has children")
+            childNotSelected = False
+            for child in n.getAllChildren():
+                if not child.isSelected():
+                    childNotSelected = True
+                    child.setSelected(True)
+
+    def handlePressEvent(self, n):
+        infoMessage("groogleView::handlePressEvent: Press event recieved from: ", n.mName)
+        if n == self.mCenterNode:
+            infoMessage("groogleView::handlePressEvent: center node, skipping")
+            
+        self.clearHighlightPaths()
+        self.highlightPathToParent(n)
+
+    def highlightPathToParent(self, node):
+        infoMessage("groogleView::highlightPathToParent: highlighting path to parent: ", node.mName)
+        if (node == self.mCenterNode):
+            warningMessage("groogleView::highlightPathToParent: shouldn't be parent node")
+        
+
+        while node != "":
+            node.mIsHighlighted = True
+            node.update()
+
+            if not node.mParent == "":
+                link = node.getLink(node.mParent)
+                link.setHighlighted(True)
+                link.update()
+
+            node = node.mParent
+
+    def clearHighlightPaths(self):
+        for node in self.mNodes:
+            if (node.mIsHighlighted):
+                node.mIsHighlighted = False
+                node.update()
+        
+            for link in node.mLinks:
+                if link.mIsHighlighted:
+                    link.setHighlighted(False)
+                    link.update()
+
+        self.mCenterNode.mIsHighlighted = False
+
+        
 
     def findNode(self, name):
         for node in self.mNodes:

@@ -43,15 +43,15 @@ class Scraper:
         out = []
         for link in self.mSoup.findAll('a', attrs={'href': re.compile("^http://")}):
             try:
-                out.append(str(link["href"])) # XXX: Returns unicode
+                out.append(str(link["href"]))
             except UnicodeEncodeError:
-                warningMessage("scraper::getLinks: UnivodeEncodeError")
+                warningMessage("scraper::getLinks: UnicodeEncodeError")
         return out
 
     def checkLinkExtensions(self, links):
         for link in links:
             if (not self.isHTML(link)) and (not self.isImage(link)) and (not self.isVideo(link)) and (not self.isDoc(link)):
-                print "[-] Unkown link type:", link
+                warningMessage("scraper::checkLinkExtensions: Unkown link type:", link)
 
     def getHTMLLinks(self, links):
         out = [link for link in links if self.isHTML(link)]
@@ -96,17 +96,6 @@ class Scraper:
             return True
         else:
             return False
-
-    def scrapeAll(self, url, depth, indent = 0):
-        print "[*]" + "\t" * indent, "Scraping", url, "with depth", depth
-        if depth == 0:
-            return self.getHtml(url)
-        else:
-            outData = ""
-            links = self.getLinks(self.getHtml(url))
-            for link in links:
-                outData += self.scrapeAll(link, depth-1, indent + 1)
-            return outData
 
 if __name__ == "__main__":
     scraper = Scraper("http://google.com")

@@ -10,7 +10,7 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4 import *
 
-
+from debug import *
 
 class Node(QtGui.QGraphicsObject):
     def __init__(self, parent = None):
@@ -21,11 +21,11 @@ class Node(QtGui.QGraphicsObject):
         self.mChildren = []
         self.mParent = ""
 
-        self.update()
         self.mTextColor = Qt.Qt.darkGreen;
         self.mOutlineColor = Qt.Qt.darkBlue;
         self.mBackgroundColor = Qt.Qt.white;
         self.mIsHovered = False;
+        self.mIsHighlighted = False;
 
         self.setFlag(QtGui.QGraphicsItem.ItemIsMovable)
         self.setFlag(QtGui.QGraphicsItem.ItemIsSelectable)
@@ -35,14 +35,27 @@ class Node(QtGui.QGraphicsObject):
 
     def addLink(self, link):
         mLinks.append(link);
-     
+
+    def getAllChildren(self):
+        out = [self]
+        for child in self.mChildren:
+            out += child.getAllChildren()
+        return out
+    
+    def getLink(self, node):
+        for link in self.mLinks:
+            if node == link.mToNode or node == link.mFromNode:
+                return link
+        errorMessage("node::getLink: no link between nodes found")
+
     def outlineRect(self):
         size = 60;
         roundness = 30
         rect = QtCore.QRectF(-size + roundness/2, -size + size/2, size + roundness, size); #yea ionno,but it works
     
-        if (self.mIsHovered):
+        if (self.mIsHovered or self.mIsHighlighted):
             rect.adjust(-5, -5, 5, 5);
+
         return rect;
 
     def boundingRect(self):
@@ -60,6 +73,9 @@ class Node(QtGui.QGraphicsObject):
         if (option.state & Qt.QStyle.State_Selected):
             pen.setStyle(Qt.Qt.DotLine);
             pen.setWidth(2);
+
+        if (self.mIsHighlighted):
+            pen.setWidth(2)
             
         painter.setPen(pen);
         painter.setBrush(self.mBackgroundColor);
@@ -79,8 +95,10 @@ class Node(QtGui.QGraphicsObject):
         self.update();
 
     def mouseDoubleClickEvent(self, event):
-        print "[+] Double click event on:", self.mName, "emitting signal \"doubleClickEvent\""
         QtCore.QObject.emit(self, QtCore.SIGNAL("doubleClickEvent"), self)
+
+    def mousePressEvent(self, event):
+        QtCore.QObject.emit(self, QtCore.SIGNAL("singlePressEvent"), self)
 
     def itemChange(self, change, value):
         if (change == QGraphicsItem.ItemPositionHasChanged):
