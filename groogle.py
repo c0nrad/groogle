@@ -10,7 +10,7 @@ from PyQt4 import *
 def main():
 
     # Set Google Query
-    googleSearch = "apple"    
+    googleSearch = "Microsoft"    
     print "[*] Doing analysis on the google search:", googleSearch
     
     # Start the viewer

@@ -30,8 +30,9 @@ class GroogleView(QtGui.QWidget):
     
         self.mScene =  QGraphicsScene(0, 0, self.SCENE_WIDTH, self.SCENE_HEIGHT)
         self.mView = QGraphicsView(self.mScene)
+        self.mView.setDragMode(QtGui.QGraphicsView.RubberBandDrag)
+
         self.mNodes = []
-        self.mLinks = []
         self.mCenterNode = ""
         self.mModel = model.Model(self)
         self.initUI()        
@@ -45,6 +46,8 @@ class GroogleView(QtGui.QWidget):
         self.setLayout(layout)
         self.show()
 
+        self.connect(self.mScene, SIGNAL("selectionChanged()"), self.handleSelectionChange)
+
     def addCenterNode(self, name):
         goodMessage("groogleView::addCenterNode: ", name)
 
@@ -54,7 +57,7 @@ class GroogleView(QtGui.QWidget):
         infoMessage("groogleView::addCenterNode: clearing the scene")
         self.mScene.clear()
         n = self.addNode(self.SCENE_WIDTH / 2 , self.SCENE_HEIGHT / 2, name)
-        n.mIsHighlighted = True
+        n.setHighlighted(False)
         self.mCenterNode = n
         return self.mCenterNode
 
@@ -70,14 +73,26 @@ class GroogleView(QtGui.QWidget):
 
         # Fragile, fix it
         self.connect(mNode, SIGNAL("doubleClickEvent"), self.handleDoubleClick)
-        self.connect(mNode, SIGNAL("singlePressEvent"), self.handlePressEvent)
         return mNode
 
-    def handleDoubleClick(self, n):
-        infoMessage("Double click signal recieved from: ", n.mName)
+    def handleSelectionChange(self):
+        items = self.mScene.selectedItems()
+        self.clearHighlightPaths()
         
+        infoMessage("all items should be unhighlighted...")
+        self.clearHighlightPaths()
+        
+        for item in items:
+            if isinstance(item, node.Node):
+                self.highlightPathToParent(item)
+            elif isinstance(item, link.Link):
+                pass
+            else:
+                warningMessage("[-] Dafuq is this: ", item)
+
+    def handleDoubleClick(self, n):
         if len(n.mChildren) == 0:
-            infoMessage("groogleView::infoMessage: no children!")
+            infoMessage("groogleView::handleDoubleClick: no children!")
             searchString = ""
             name = n.mName
             while not n == "":
@@ -85,11 +100,9 @@ class GroogleView(QtGui.QWidget):
                 n = n.mParent
             self.mModel.generateQueries(name, searchString)
         else:
-            infoMessage("groogleView::infoMessage: ", n.mName, " has children")
-            childNotSelected = False
+            infoMessage("groogleView::handleDoubleClick: ", n.mName, " has children")
             for child in n.getAllChildren():
                 if not child.isSelected():
-                    childNotSelected = True
                     child.setSelected(True)
 
     def handlePressEvent(self, n):
@@ -97,6 +110,7 @@ class GroogleView(QtGui.QWidget):
         if n == self.mCenterNode:
             infoMessage("groogleView::handlePressEvent: center node, skipping")
             
+
         self.clearHighlightPaths()
         self.highlightPathToParent(n)
 
@@ -105,32 +119,33 @@ class GroogleView(QtGui.QWidget):
         if (node == self.mCenterNode):
             warningMessage("groogleView::highlightPathToParent: shouldn't be parent node")
         
-
         while node != "":
-            node.mIsHighlighted = True
+            node.setHighlighted(True)
             node.update()
 
             if not node.mParent == "":
                 link = node.getLink(node.mParent)
                 link.setHighlighted(True)
+                link.trackNodes()
                 link.update()
 
             node = node.mParent
+        
 
     def clearHighlightPaths(self):
         for node in self.mNodes:
-            if (node.mIsHighlighted):
-                node.mIsHighlighted = False
+            if (node.isHighlighted()):
+                node.setHighlighted(False)
                 node.update()
         
             for link in node.mLinks:
-                if link.mIsHighlighted:
+                if link.isHighlighted():
                     link.setHighlighted(False)
+                    link.trackNodes()
                     link.update()
+ 
+        self.mCenterNode.setHighlighted(False)
 
-        self.mCenterNode.mIsHighlighted = False
-
-        
 
     def findNode(self, name):
         for node in self.mNodes:
@@ -164,9 +179,6 @@ class GroogleView(QtGui.QWidget):
         return (round(x + nodeX), round(y + nodeY))
 
     def removeNode(self, node):
-        #
-        #    errorMessage("googleView::removeNode: node isn't of type node")
-
         infoMessage("Removing node: ", node.mName)
  
         for child in node.mChildren:
@@ -192,8 +204,6 @@ class GroogleView(QtGui.QWidget):
             
         node.mChildren = []
 
-    # Level 0 = Center node
-    # Level 1 = first circle of nodes
     def addNodes(self, centerWord, words):
         centerNode = self.findNode(centerWord)
         if centerNode == "":
@@ -234,6 +244,7 @@ class GroogleView(QtGui.QWidget):
             nodeCount += 1
 
     def addLink(self, nodeA, nodeB):
+        goodMessage("groogleView::addLink: ", nodeA.mName, " - ", nodeB.mName)
         if (nodeA == nodeB):
             errorMessage("groogleView::addLink: nodes can't be the same")
             return

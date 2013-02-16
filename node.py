@@ -1,5 +1,4 @@
 # node.py
-
 # Structure for each individual node on the qgraphicsscene, also holds information about the word
 # such as it's queryes and other relations
 
@@ -20,6 +19,7 @@ class Node(QtGui.QGraphicsObject):
         self.mLinks = []
         self.mChildren = []
         self.mParent = ""
+        self.mQueries = []
 
         self.mTextColor = Qt.Qt.darkGreen;
         self.mOutlineColor = Qt.Qt.darkBlue;
@@ -41,6 +41,12 @@ class Node(QtGui.QGraphicsObject):
         for child in self.mChildren:
             out += child.getAllChildren()
         return out
+
+    def setHighlighted(self, val):
+        self.mIsHighlighted = val
+
+    def isHighlighted(self):
+        return self.mIsHighlighted
     
     def getLink(self, node):
         for link in self.mLinks:
@@ -76,6 +82,7 @@ class Node(QtGui.QGraphicsObject):
 
         if (self.mIsHighlighted):
             pen.setWidth(2)
+            
             
         painter.setPen(pen);
         painter.setBrush(self.mBackgroundColor);

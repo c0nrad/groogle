@@ -16,10 +16,12 @@ class Model:
         self.mURLQueue = Queue.Queue()
         self.mView = view
 
+        self.mThreads = []
         for x in range(10):
             t = Thread(target=self.generateQuery)
             t.daemon = True
             t.start()
+            mThreads.append(t)
     
         self.mGoogleToAnalyzerMap = dict()
 

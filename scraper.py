@@ -100,7 +100,7 @@ class Scraper:
 if __name__ == "__main__":
     scraper = Scraper("http://google.com")
 
-    assert scraper.isVideo("http://www.pornhub.com/100babesAndAdam.avi")
+    assert scraper.isVideo("http://www.porn.com/100babesAndAdam.avi")
     assert scraper.isImage("www.adamIsSexy.com/awwYeah.jpg")
     assert scraper.isDoc("http://www.myBankMoney.com/brokeAsShit.doc")
     assert not scraper.isVideo("http://www.google.com/search+=lolololnowd")

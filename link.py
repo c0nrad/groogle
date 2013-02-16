@@ -13,20 +13,32 @@ class Link(QtGui.QGraphicsLineItem):
 
         self.mFromNode.mLinks.append(self)
         self.mToNode.mLinks.append(self)
-        self.setZValue(-1)
-        self.mColor = Qt.Qt.darkRed;
+        self.setZValue(-2)
+        self.mHighlightedColor = Qt.Qt.darkRed;
+        self.mColor = Qt.Qt.darkBlue;
         self.trackNodes();
 
+    def __str__(self):
+        return "Link: ( " + self.mFromNode.mName + ", " + self.mToNode.mName + ")"
+
     def setHighlighted(self, val):
+        if val:
+            self.setZValue(-1)
+        else:
+            self.setZValue(-2)
         self.mIsHighlighted = val
 
-    def trackNodes(self):
-        pen = QtGui.QPen(self.mColor);
-        pen.setWidth(0)
+    def isHighlighted(self):
+        return self.mIsHighlighted
 
-        if self.mIsHighlighted == True:
-            pen.setWidth(2)
-            
-            
+    def trackNodes(self):
+        pen = QtGui.QPen();
+
+        if self.isHighlighted():
+            pen.setWidth(3)
+            pen.setColor(self.mHighlightedColor)
+        else:
+            pen.setWidth(0)
+
         self.setPen(pen)
         self.setLine(QtCore.QLineF(self.mFromNode.pos(), self.mToNode.pos()))

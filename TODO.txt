@@ -1,15 +1,29 @@
 Todo List
 
-- Make double clicking on nodes more exciting (have it expand dynamically)
-- Highlight path back to parent
+
 - Information to be shown when node is clicked on/hover
-- Nodes should be as big as their frequency
+
+1. - Nodes should be as big as their frequency
+   1.) Have 5ish different sizes?
+   2.) Each node will be given a size depending on their word freqeucny
+   3.) Based on a percantage of the total
+
+
 - Pop up menu at start to ask for initial search
 - Tabbed searches, also maybe a way of copying them over
 - Zoomin/out and pan handling done exclusivly with mouse
-- Delete nodes with children
-- Add support for facebook and twitter searches only
+2. - Delete nodes with children
+   - 
+
+3. - Add support for facebook and twitter searches only (WIKI)
+   - This should be a new project?
+     - Just a wiki version would be neat, and possibly even useful
+
 - Multiple links per node pair?
+  - I don't think this happens, but it should be looked into. Perhaps have a sceneDump() function to check over it
+
 - Double click on node expands all
+  - Instead maybe just expand all selectedNodes that aren't already selected
+
 - Add seeds
 
