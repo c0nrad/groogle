@@ -3,6 +3,7 @@
 # Does analysis on queries and adds them to the view
 import query
 from collections import Counter
+import string
 
 class Analyzer:
 
@@ -12,7 +13,7 @@ class Analyzer:
         self.mSorted = []
         self.isSorted = False
         self.mIndex = 0
-
+        
     def __iter__(self):
         return self
 
@@ -54,4 +55,7 @@ class Analyzer:
 
     def getTopVideos(self, count):
         pass
+    
+        
+
     

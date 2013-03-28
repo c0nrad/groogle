@@ -21,7 +21,7 @@ class Model:
             t = Thread(target=self.generateQuery)
             t.daemon = True
             t.start()
-            mThreads.append(t)
+            self.mThreads.append(t)
     
         self.mGoogleToAnalyzerMap = dict()
 
